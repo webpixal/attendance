@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZKTeco Device Manager</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>ZKTeco Device Manager</h1>
+    
+    <div class="actions">
+      <button id="discoverBtn">Discover Devices</button>
+    </div>
+    
+    <div id="deviceList">
+      <h2>Discovered Devices</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>IP Address</th>
+            <th>Serial</th>
+            <th>Model</th>
+            <th>Last Seen</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="devicesBody"></tbody>
+      </table>
+    </div>
+  </div>
+  
+  <script src="/js/script.js"></script>
+</body>
+</html>

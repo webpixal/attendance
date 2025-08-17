@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Device Details</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Device Details</h1>
+    <div id="deviceInfo">
+      <h2>Device Information</h2>
+      <div id="deviceDetails"></div>
+    </div>
+    
+    <div class="actions">
+      <button id="connectBtn">Connect & Update</button>
+      <button id="getAttendanceBtn">Get Attendance</button>
+    </div>
+    
+    <div id="attendanceList">
+      <h2>Attendance Records</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>User ID</th>
+            <th>Timestamp</th>
+            <th>Status</th>
+            <th>Verification</th>
+          </tr>
+        </thead>
+        <tbody id="attendanceBody"></tbody>
+      </table>
+    </div>
+  </div>
+  
+  <script>
+    const deviceId = '<%= deviceId %>';
+  </script>
+  <script src="/js/device.js"></script>
+</body>
+</html>
