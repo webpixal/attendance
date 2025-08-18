@@ -1,21 +1,75 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 const logger = require('../utils/logger');
 
 exports.login = async (req, res) => {
   try {
-    // Same as userController.loginUser
-  } catch (err) {
+    const { email, password } = req.body;
+    
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Generate auth token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '7d'
+    });
+
+    user.tokens = user.tokens.concat({ token });
+    await user.save();
+
+    res.json({ user, token });
+  }  catch (err) {
     logger.error(`Login failed: ${err.message}`);
     res.status(500).json({ error: 'Authentication failed' });
   }
 };
 
 exports.register = async (req, res) => {
-  try {
-    // Same as userController.registerUser
-  } catch (err) {
+try {
+    const { name, email, password, role, schoolId } = req.body;
+    
+    // Check if user exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'User already exists' });
+    }
+
+    // Create new user
+    const user = new User({
+      name,
+      email,
+      password,
+      role: role || 'staff',
+      schoolId
+    });
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+
+    await user.save();
+
+    // Generate auth token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '7d'
+    });
+
+    user.tokens = user.tokens.concat({ token });
+    await user.save();
+
+    res.status(201).json({ user, token });
+  }  catch (err) {
     logger.error(`Registration failed: ${err.message}`);
     res.status(500).json({ error: 'Registration failed' });
   }
